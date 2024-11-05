@@ -110,6 +110,48 @@ func (p *Peer) HandleConnection(conn net.Conn) {
 	p.PeersLock.Unlock()
 }
 
+// Send a file to a peer
+func (p *Peer) SendFile(fileName, peerAddr string) {
+	p.PeersLock.Lock()
+	conn, exist := p.Peers[peerAddr]
+	p.PeersLock.Unlock()
+
+	if !exist {
+		fmt.Printf("No connection found for peer %s\n", peerAddr)
+		return
+	}
+
+	// Open file
+	file, err := os.Open(fileName)
+	if err != nil {
+		fmt.Printf("Failed to open file %s\n", fileName)
+	}
+	defer file.Close()
+
+	// Read file content
+	fileInfo, _ := file.Stat()
+	buffer := make([]byte, fileInfo.Size())
+	_, err = file.Read(buffer)
+	if err != nil {
+		fmt.Printf("failed to read file %s\n", fileName)
+		return
+	}
+
+	// Send the file name followed by the file content
+	_, err = conn.Write([]byte(fileName + "\n"))
+	if err != nil {
+		fmt.Printf("Failed to send file name: %v\n", err)
+		return
+	}
+	_, err = conn.Write(buffer)
+	if err != nil {
+		fmt.Printf("Failed to send file content: %v\n", err)
+		return
+	}
+
+	fmt.Printf("File %s sent to peer %s\n", fileName, peerAddr)
+}
+
 // CLI-based connection to other peers
 func (p *Peer) ConnectToPeers(addresses []string) {
 	for _, addr := range addresses {
