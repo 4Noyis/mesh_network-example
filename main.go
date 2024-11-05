@@ -123,7 +123,7 @@ func main() {
 		fmt.Println("Usage: go run main.go <own_address> [<other_peer_adress>...]")
 		return
 	}
-
+	//
 	ownAdress := os.Args[1]
 	peer := NewPeer(ownAdress)
 
