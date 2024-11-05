@@ -19,8 +19,8 @@ This project demonstrates a simple Peer-to-Peer (P2P) networking implementation 
 - Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/p2p-networking.git
-   cd p2p-networking
+   git clone https://github.com/4Noyis/p2p_network-example.git
+   cd p2p_network-example
 
 ## Usage
 
